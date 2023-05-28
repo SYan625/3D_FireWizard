@@ -18,7 +18,7 @@ public class PlayerController : MonoBehaviour
     Rigidbody myRigidbody;
     AudioSource walkSound;
 
-    public static int hp = 100;
+    public static float hp = 100;
     public static float mp = 100;
 
     float rcSpeed;

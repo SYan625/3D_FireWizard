@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class DragonFire : MonoBehaviour
 {
-    // Start is called before the first frame update
+    
+
+
     void Start()
     {
         
@@ -14,5 +16,13 @@ public class DragonFire : MonoBehaviour
     void Update()
     {
         
+    }
+
+    private void OnTriggerStay(Collider other)
+    {
+        if (other.tag == "Player")
+        {
+            PlayerController.hp -= 0.5f;            
+        }
     }
 }
