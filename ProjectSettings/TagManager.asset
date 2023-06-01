@@ -9,6 +9,7 @@ TagManager:
   - Torch_left
   - Torch_right
   - Enemy
+  - Torch_last
   layers:
   - Default
   - TransparentFX

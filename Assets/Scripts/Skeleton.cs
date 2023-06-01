@@ -10,14 +10,17 @@ public class Skeleton : MonoBehaviour
     Rigidbody myRigibody;
     Animator myAnimator;
     NavMeshAgent _nav;
+    Transform target;
 
-    public static int hp = 100;
+    public  int hp = 100;
     public static bool 開始動 = false;
 
+    public GameObject swordCollider;
     public Slider 血量條;
     public GameObject hp_bar;
-    public Transform target;
     public List<Rigidbody> rigidList;
+    public BoxCollider _boxCollider;
+
     float forward;
     
 
@@ -27,6 +30,7 @@ public class Skeleton : MonoBehaviour
         myRigibody = GetComponent<Rigidbody>();
         myAnimator = GetComponent<Animator>();
         _nav = GetComponent<NavMeshAgent>();
+        target = GameObject.Find("Player").GetComponent<Transform>();
         血量條.value = hp;
     }
 
@@ -72,8 +76,16 @@ public class Skeleton : MonoBehaviour
     {
         開始動 = false;
         _nav.enabled = false;
-        hp_bar.SetActive(false);
         myAnimator.enabled = false;
+
+        // 預防死亡後骷髏會亂彈
+        _boxCollider.enabled = false;
+        myRigibody.useGravity = false;
+        myRigibody.isKinematic = true;
+
+        swordCollider.SetActive(false); // 預防骷髏死亡後劍還會對玩家扣血   
+        hp_bar.SetActive(false);
+        
         foreach (Rigidbody r in rigidList)
         {
             r.isKinematic = false;

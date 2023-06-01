@@ -6,8 +6,8 @@ using UnityEngine.UI;
 public class Enemy_Sword : MonoBehaviour
 {
 
-    public Rigidbody _player;
-    public Image _img;
+    Rigidbody _player;
+    Image _redScreen;
     AudioSource _audio;
 
     Color _color = new Color(1f, 0f, 0f, 0.45f);
@@ -16,19 +16,19 @@ public class Enemy_Sword : MonoBehaviour
     void Start()
     {
         _audio = GetComponent<AudioSource>();
+        _player = GameObject.Find("Player").GetComponent<Rigidbody>();
+        _redScreen = GameObject.Find("redScreen").GetComponent<Image>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Skeleton.hp <= 0)  // 防止怪物死後的劍還是可以攻擊玩家
-            Destroy(this);
 
-        if (_img.color.a > 0)
+        if (_redScreen.color.a > 0)
         {
-            float Alpha = _img.color.a;
+            float Alpha = _redScreen.color.a;
             Alpha -= Time.deltaTime;
-            _img.color = new Color(_img.color.r, _img.color.g , _img.color.b, Alpha);
+            _redScreen.color = new Color(_redScreen.color.r, _redScreen.color.g , _redScreen.color.b, Alpha);
         }
 
         
@@ -39,7 +39,7 @@ public class Enemy_Sword : MonoBehaviour
         if (other.tag == "Player")
         {
             _audio.Play();
-            _img.color = _color;
+            _redScreen.color = _color;
             PlayerController.hp -= 25;
             _player.AddRelativeForce(Vector3.back * 500f ,ForceMode.Force);
         }

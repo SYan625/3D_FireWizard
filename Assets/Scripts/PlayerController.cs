@@ -33,6 +33,8 @@ public class PlayerController : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody>();
         walkSound = GetComponent<AudioSource>();
+        hp = 100;
+        mp = 100;
         血量條.value = hp;
         魔量條.value = mp;
         isGrounded = true;

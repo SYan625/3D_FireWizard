@@ -9,26 +9,34 @@ public class GameManager : MonoBehaviour
 
     GameObject 木門_左;
     GameObject 木門_右;
+    GameObject 木門_最終;
     public static bool wood_door_left = false;
     public static bool wood_door_right = false;
+    public static bool wood_door_last = false;
     public static bool gameOn;
+    public static bool key = false;
 
-    public GameObject setUI;
+    public GameObject SetUI;
+    public GameObject DeadUI;
+    public GameObject _fire1;
+    public GameObject _fire2;
 
     void Start()
     {
         木門_左 = GameObject.Find("木門_左");
         木門_右 = GameObject.Find("木門_右");
+        木門_最終 = GameObject.Find("木門_最終");
         gameOn = true;
+        Time.timeScale = 1f; // 預防玩家死亡後，重新開始畫面會卡住 & 回到首頁後開始會卡住
     }
 
     // Update is called once per frame
     void Update() 
     {
 
-        if (PlayerController.hp <= 0)
+        if (PlayerController.hp <= 0 && gameOn)
         {
-            // 跳出重新開始遊戲的介面
+            OpenDeadUI();
         }
 
         if (wood_door_left == true && wood_door_right == true)
@@ -37,6 +45,14 @@ public class GameManager : MonoBehaviour
             木門_右.transform.rotation = Quaternion.Euler(0, 75, 0);
             wood_door_left = false;
             wood_door_right = false;
+        }
+
+        if (wood_door_last == true)
+        {
+            木門_最終.transform.Rotate(new Vector3(0, 90, 0)); //以原本的角度再轉90度
+            _fire1.SetActive(true);
+            _fire2.SetActive(true);
+            wood_door_last = false;
         }
 
     }
@@ -51,13 +67,21 @@ public class GameManager : MonoBehaviour
 
     public void StartGame()
     {
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+        gameOn = true;
         SceneManager.LoadScene(1);
+    }
+
+    public void HomePage()
+    {
+        SceneManager.LoadScene(0);
     }
 
     public void backToGame()
     {
         Time.timeScale = 1f;
-        setUI.SetActive(false);
+        SetUI.SetActive(false);
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
         gameOn = true;
@@ -68,8 +92,16 @@ public class GameManager : MonoBehaviour
         Cursor.lockState = CursorLockMode.Confined;
         Cursor.visible = true;
         Time.timeScale = 0f;
-        setUI.SetActive(true);
+        SetUI.SetActive(true);
         gameOn = false;
     }
 
+    public void OpenDeadUI()
+    {
+        Time.timeScale = 0f;
+        Cursor.lockState = CursorLockMode.Confined;
+        Cursor.visible = true;
+        DeadUI.SetActive(true);
+        gameOn = false;
+    }
 }
