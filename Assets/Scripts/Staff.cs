@@ -26,6 +26,7 @@ public class Staff : MonoBehaviour
         {
             if (Input.GetMouseButtonDown(0)) //ÀË´úª±®a¬O§_¦³«ö¤U·Æ¹«¥ªÁä
             {
+                GameManager._hurtSkeleton = true;
                 PlayerController.mp -= 25;
                 staffAnimation.SetBool("Attack", true);
                 attackSound.Play();

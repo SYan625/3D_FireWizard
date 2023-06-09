@@ -11,19 +11,18 @@ public class Skeleton : MonoBehaviour
     Animator myAnimator;
     NavMeshAgent _nav;
     Transform target;
-
-    public  int hp = 100;
     public static bool 開始動 = false;
 
-    public GameObject swordCollider;
+    [Header("Skeleton Constitution")]
+    public  int hp = 100;
+
     public Slider 血量條;
     public GameObject hp_bar;
+    public GameObject swordCollider;
     public List<Rigidbody> rigidList;
-    public BoxCollider _boxCollider;
 
     float forward;
     
-
 
     void Start()
     {
@@ -64,9 +63,11 @@ public class Skeleton : MonoBehaviour
 
     private void OnTriggerEnter(Collider other) 
     {
-        if (other.tag == "FireBall")
+        if (other.tag == "FireBall" && GameManager._hurtSkeleton)
         {
             hp -= 25;
+            Debug.Log("-25");
+            GameManager._hurtSkeleton = false;
             hp_bar.SetActive(true);
         }
 
@@ -79,7 +80,6 @@ public class Skeleton : MonoBehaviour
         myAnimator.enabled = false;
 
         // 預防死亡後骷髏會亂彈
-        _boxCollider.enabled = false;
         myRigibody.useGravity = false;
         myRigibody.isKinematic = true;
 

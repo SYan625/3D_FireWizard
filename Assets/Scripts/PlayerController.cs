@@ -6,17 +6,21 @@ using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour
 {
-    
-    public float speed;
-    public int jumpPower;
+    [Header("Player Constitution")]
+    [SerializeField]
+    private float speed;
+    [SerializeField]
+    private int jumpPower;
+
+    [Header("Player UI")]
     public Slider 血量條;
     public Slider 魔量條;
     public LayerMask groundMask;
     public AudioClip[] audio;
-    public GameObject setUI;
 
     Rigidbody myRigidbody;
     AudioSource walkSound;
+    CapsuleCollider _capCollider;
 
     public static float hp = 100;
     public static float mp = 100;
@@ -24,6 +28,7 @@ public class PlayerController : MonoBehaviour
     float rcSpeed;
     bool countDown = false;
     bool isWalk;
+    bool isRun;
     bool isJump;
     bool isGrounded;
     float 持續時間;
@@ -33,6 +38,7 @@ public class PlayerController : MonoBehaviour
     {
         myRigidbody = GetComponent<Rigidbody>();
         walkSound = GetComponent<AudioSource>();
+        _capCollider = GetComponent<CapsuleCollider>();
         hp = 100;
         mp = 100;
         血量條.value = hp;
@@ -95,14 +101,16 @@ public class PlayerController : MonoBehaviour
     public void Move(InputAction.CallbackContext ctx)
     {
         moveVector = ctx.ReadValue<Vector2>();
+        isWalk = true;
 
-        if (isWalk == false)
+        if (ctx.started)
         {
-            walkSound.clip = audio[0];
+            if (isWalk == true && isRun == false)
+            {
+                walkSound.clip = audio[0];             
+            }
             walkSound.Play();
         }
-
-        isWalk = true;
 
         if (ctx.canceled)
         {
@@ -129,22 +137,26 @@ public class PlayerController : MonoBehaviour
     {
         if (ctx.performed && isGrounded && isWalk)
         {
+            isRun = true;
+            speed = rcSpeed + 10f;
             walkSound.clip = audio[1];
             walkSound.Play();
-            speed = rcSpeed + 25f;
-
         }
-        if(ctx.canceled  && isWalk)
+        if(ctx.canceled)
         {
+            isRun = false;
             speed = rcSpeed;
             walkSound.clip = audio[0];
             walkSound.Play();
-
+            if (isWalk == false && isRun == false)
+            {
+                walkSound.Stop();
+            }
         }
     }
 
 
-    private void OnCollisionEnter(Collision other)
+    private void OnCollisionEnter(Collision other) // 撞到火焰反彈
     {
         if (other.gameObject.tag == "Fire")
         {
@@ -169,6 +181,22 @@ public class PlayerController : MonoBehaviour
             }
 
         }
+    }
+
+    private void OnCollisionStay(Collision collision)  // 人物碰到牆壁後把摩擦力改成 0 讓人物不會一直卡在牆上
+    {
+        if (collision.gameObject.tag == "Wall")
+        {
+            _capCollider.material.dynamicFriction = 0f;
+            _capCollider.material.staticFriction = 0f;
+        }
+
+    }
+
+    private void OnCollisionExit(Collision collision)  // 離開牆壁後摩擦力恢復 
+    {
+        _capCollider.material.dynamicFriction = 1f;
+        _capCollider.material.staticFriction = 1f;
     }
 
 }

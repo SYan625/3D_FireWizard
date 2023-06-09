@@ -4,19 +4,15 @@ using UnityEngine;
 
 public class FireBall : MonoBehaviour
 {
-     /* public Transform player;
-      private Vector3 trackPos;*/
 
     void Start()
     {
 
     }
 
-    // Update is called once per frame
     void Update()
     {
-        /*trackPos = player.position - transform.position;
-        trackPos.y = 0;*/
+
     }
     private void OnCollisionEnter(Collision collision)
     {
@@ -39,6 +35,8 @@ public class FireBall : MonoBehaviour
             GameManager.wood_door_last = true;
             print("³Ì²×¤õ§â");
         }
+
+
 
         if (collision.gameObject.tag == "Fire")
         {

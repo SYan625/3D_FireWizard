@@ -4,10 +4,13 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-    
+    AudioSource _audio;
+
+    public GameObject _keyText;
+
     void Start()
     {
-        
+        _audio = GetComponent<AudioSource>();
     }
 
     
@@ -20,8 +23,10 @@ public class Key : MonoBehaviour
     {
         if (other.tag == "Player")
         {
+            _audio.Play();
             GameManager.key = true;
-            Destroy(gameObject);
+            _keyText.SetActive(true);
+            Destroy(gameObject,0.3f);
         }
     }
 }
